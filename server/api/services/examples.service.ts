@@ -1,35 +1,35 @@
-import Promise from 'bluebird';
-import L from '../../common/logger'
+import { default as Promise } from 'bluebird';
+import { logger } from '../../common/logger';
 
-let id = 0;
 interface Example {
-  id: number,
-  name: string
-};
+  id: number;
+  name: string;
+}
 
 const examples: Example[] = [
-    { id: id++, name: 'example 0' }, 
-    { id: id++, name: 'example 1' }
+    { id: 0, name: 'example 0' },
+    { id: 1, name: 'example 1' },
 ];
 
 export class ExamplesService {
   all(): Promise<Example[]> {
-    L.info(examples, 'fetch all examples');
+    logger.info(examples, 'fetch all examples');
     return Promise.resolve(examples);
   }
 
   byId(id: number): Promise<Example> {
-    L.info(`fetch example with id ${id}`);
-    return this.all().then(r => r[id])
+    logger.info(`fetch example with id ${id}`);
+    return this.all().then(r => r[id]);
   }
 
   create(name: string): Promise<Example> {
-    L.info(`create example with name ${name}`);
+    logger.info(`create example with name ${name}`);
     const example: Example = {
-      id: id++,
-      name
+      name,
+      id: 2,
     };
-    examples.push(example)
+
+    examples.push(example);
     return Promise.resolve(example);
   }
 }

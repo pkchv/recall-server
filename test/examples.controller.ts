@@ -1,25 +1,30 @@
 import 'mocha';
 import { expect } from 'chai';
-import request from 'supertest';
-import Server from '../server';
+import { default as request } from 'supertest';
+import { App } from '../server/common/server';
+import routes from '../server/routes';
+
+const app = (new App())
+  .router(routes)
+  .listen(3000);
 
 describe('Examples', () => {
   it('should get all examples', () =>
-    request(Server)
+    request(app)
       .get('/api/v1/examples')
       .expect('Content-Type', /json/)
-      .then(r => {
+      .then((r) => {
         expect(r.body)
           .to.be.an('array')
           .of.length(2);
       }));
 
   it('should add a new example', () =>
-    request(Server)
+    request(app)
       .post('/api/v1/examples')
       .send({ name: 'test' })
       .expect('Content-Type', /json/)
-      .then(r => {
+      .then((r) => {
         expect(r.body)
           .to.be.an('object')
           .that.has.property('name')
@@ -27,10 +32,10 @@ describe('Examples', () => {
       }));
 
   it('should get an example by id', () =>
-    request(Server)
+    request(app)
       .get('/api/v1/examples/2')
       .expect('Content-Type', /json/)
-      .then(r => {
+      .then((r) => {
         expect(r.body)
           .to.be.an('object')
           .that.has.property('name')

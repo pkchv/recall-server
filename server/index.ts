@@ -1,14 +1,13 @@
 import './common/env';
-import "reflect-metadata";
-import { createConnection } from "typeorm";
-import Server from './common/server';
+import 'reflect-metadata';
+import { createConnection } from 'typeorm';
+import { App } from './common/server';
 import routes from './routes';
 
+createConnection().then(() => {
+  const port = parseInt(process.env.PORT, 10);
 
-createConnection().then(connection => {
-  const port = parseInt(process.env.PORT)
-
-  new Server()
+  new App()
     .router(routes)
-    .listen(port)
-})
+    .listen(port);
+});
