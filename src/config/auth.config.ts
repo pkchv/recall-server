@@ -7,8 +7,8 @@ import { InjectRepository } from "typeorm-typedi-extensions";
 
 import { Environment } from "../common/environment";
 import { log } from "../common/logger";
-import { User } from "../database/entities/User";
-import { IConfiguration } from "../interfaces/IConfiguration";
+import { User } from "../entities/User";
+import { IConfiguration } from "../interfaces/core/IConfiguration";
 import { UsersRepository } from "../repositories/users.repository";
 
 export class AuthConfiguration implements IConfiguration {

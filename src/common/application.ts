@@ -3,8 +3,8 @@ import http from "http";
 import os from "os";
 import { Inject, Service } from "typedi";
 
-import { IConfiguration } from "../interfaces/IConfiguration";
-import { IController } from "../interfaces/IController";
+import { IConfiguration } from "../interfaces/core/IConfiguration";
+import { IController } from "../interfaces/core/IController";
 import { notFound, onError } from "../middlewares/error";
 import { Environment } from "./environment";
 import { log } from "./logger";

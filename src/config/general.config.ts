@@ -5,7 +5,7 @@ import expressValidator from "express-validator";
 import { Inject } from "typedi";
 
 import { Environment } from "../common/environment";
-import { IConfiguration } from "../interfaces/IConfiguration";
+import { IConfiguration } from "../interfaces/core/IConfiguration";
 
 export class GeneralConfiguration implements IConfiguration {
   constructor(

@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   version: '1'
   title: .
-  description: Flashcard application backend service
+  description: Recall (spaced repetition software) backend service
 basePath: /
 tags:
   - name: Users

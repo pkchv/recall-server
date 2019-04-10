@@ -6,7 +6,7 @@ services:
     container_name: "postgres"
     restart: always
     environment:
-      POSTGRES_DB: hypercards-dev
+      POSTGRES_DB: recall-dev
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
     ports:

@@ -8,7 +8,7 @@ import sinonChai from "sinon-chai";
 import { mockRes } from "sinon-express-mock";
 
 import { AuthController } from "../../../src/controllers/auth.controller";
-import { createRequestWithBody } from "../../setup/create-request";
+import { createRequestWithBody } from "../../setup/create-mock-request";
 
 use(sinonChai);
 use(chaiAsPromised);
@@ -38,7 +38,7 @@ describe("auth.controller unit tests", function() {
     sb.restore();
   });
 
-  describe("#actionLogin()", function() {
+  describe("#_login()", function() {
     it("should pass error object to the next middlweware (missing username)", function() {
       const password = "Password0";
       const req = createRequestWithBody({

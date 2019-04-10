@@ -1,11 +1,12 @@
 import "mocha";
+import "reflect-metadata";
 
 import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
 import { Container } from "typedi";
 import { useContainer } from "typeorm";
 
-import { User } from "../../../src/database/entities/User";
+import { User } from "../../../src/entities/User";
 import { UsersRepository } from "../../../src/repositories/users.repository";
 import { UsersGenerator } from "../../setup/generators/users.generator";
 import { TestDatabase } from "../../setup/test.database";

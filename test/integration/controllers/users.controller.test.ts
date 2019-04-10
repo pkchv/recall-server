@@ -11,11 +11,11 @@ import { useContainer } from "typeorm";
 import uuid from "uuid/v1";
 
 import { Environment } from "../../../src/common/environment";
-import { createConfiguration } from "../../../src/config";
 import { AuthController } from "../../../src/controllers/auth.controller";
 import { UsersController } from "../../../src/controllers/users.controller";
-import { User } from "../../../src/database/entities/User";
-import { expectApiError } from "../../setup/expect-api-error";
+import { User } from "../../../src/entities/User";
+import { mountConfiguration, mountController, resetContainer, setEnvironment } from "../../setup/container-helpers";
+import { expectErrorPost } from "../../setup/expect-api-error";
 import { UsersGenerator } from "../../setup/generators/users.generator";
 import { TestDatabase } from "../../setup/test.database";
 
@@ -23,52 +23,39 @@ use(chaiAsPromised);
 
 /* tslint:disable:only-arrow-functions object-literal-sort-keys */
 describe("users.controller integration tests", function() {
-  const db = new TestDatabase();
-  const generator = new UsersGenerator();
   const instanceId = uuid();
+  const db = new TestDatabase();
+  const env = new Environment({ JWT_SECRET: "jwtsecret" });
+  setEnvironment(instanceId, env);
+  const generator = new UsersGenerator(instanceId);
   let app = null;
 
   beforeEach(async function() {
-    Container
-      .of(instanceId)
-      .set("environment", new Environment({
-        JWT_SECRET: "jwtsecret",
-    }));
-
+    app = express();
     useContainer(Container);
     await db.createConnection({ entities: [User] });
-
-    app = express();
-
-    createConfiguration(instanceId)
-      .map((config) => config.mount(app));
-
-    Container
-      .of(instanceId)
-      .get(UsersController)
-      .mount(app);
+    setEnvironment(instanceId, env);
+    mountConfiguration(instanceId, app);
+    mountController(instanceId, app, UsersController);
   });
 
   afterEach(async function() {
     await db.close();
-
-    Container
-      .of(instanceId)
-      .reset();
+    resetContainer(instanceId);
   });
 
   describe("/register", function() {
-    it("POST /register - Bad Request (400) - malformed payload", function() {
+    it("Bad Request (400) - malformed payload", function() {
       const endpoint = "/register";
       const payload = {
         foo: "bar",
       };
       const code = status.BAD_REQUEST;
 
-      return expectApiError(app, endpoint, payload, code);
+      return expectErrorPost(app, endpoint, payload, code);
     });
 
-    it("POST /register - Bad Request (400) - username property is missing", function() {
+    it("Bad Request (400) - username property is missing", function() {
       const endpoint = "/register";
       const payload = {
         email: "user@domain.com",
@@ -76,10 +63,10 @@ describe("users.controller integration tests", function() {
       };
       const code = status.BAD_REQUEST;
 
-      return expectApiError(app, endpoint, payload, code);
+      return expectErrorPost(app, endpoint, payload, code);
     });
 
-    it("POST /register - Bad Request (400) - password property is missing", function() {
+    it("Bad Request (400) - password property is missing", function() {
       const endpoint = "/register";
       const payload = {
         username: "username",
@@ -87,10 +74,10 @@ describe("users.controller integration tests", function() {
       };
       const code = status.BAD_REQUEST;
 
-      return expectApiError(app, endpoint, payload, code);
+      return expectErrorPost(app, endpoint, payload, code);
     });
 
-    it("POST /register - Bad Request (400) - email property is missing", function() {
+    it("Bad Request (400) - email property is missing", function() {
       const endpoint = "/register";
       const payload = {
         username: "username",
@@ -98,10 +85,10 @@ describe("users.controller integration tests", function() {
       };
       const code = status.BAD_REQUEST;
 
-      return expectApiError(app, endpoint, payload, code);
+      return expectErrorPost(app, endpoint, payload, code);
     });
 
-    it("POST /register - Bad Request (400) - username property is too short", function() {
+    it("Bad Request (400) - username property is too short", function() {
       const endpoint = "/register";
       const payload = {
         username: "user",
@@ -110,10 +97,10 @@ describe("users.controller integration tests", function() {
       };
       const code = status.BAD_REQUEST;
 
-      return expectApiError(app, endpoint, payload, code);
+      return expectErrorPost(app, endpoint, payload, code);
     });
 
-    it("POST /register - Bad Request (400) - email property is an invalid email", function() {
+    it("Bad Request (400) - email property is an invalid email", function() {
       const endpoint = "/register";
       const payload = {
         username: "username",
@@ -122,10 +109,10 @@ describe("users.controller integration tests", function() {
       };
       const code = status.BAD_REQUEST;
 
-      return expectApiError(app, endpoint, payload, code);
+      return expectErrorPost(app, endpoint, payload, code);
     });
 
-    it("POST /register - Bad Request (400) - password property is too short", function() {
+    it("Bad Request (400) - password property is too short", function() {
       const endpoint = "/register";
       const payload = {
         username: "username",
@@ -134,10 +121,10 @@ describe("users.controller integration tests", function() {
       };
       const code = status.BAD_REQUEST;
 
-      return expectApiError(app, endpoint, payload, code);
+      return expectErrorPost(app, endpoint, payload, code);
     });
 
-    it("POST /register - Bad Request (400) - password property is missing a number", function() {
+    it("Bad Request (400) - password property is missing a number", function() {
       const endpoint = "/register";
       const payload = {
         username: "username",
@@ -146,11 +133,11 @@ describe("users.controller integration tests", function() {
       };
       const code = status.BAD_REQUEST;
 
-      return expectApiError(app, endpoint, payload, code);
+      return expectErrorPost(app, endpoint, payload, code);
     });
 
     it(
-      "POST /register - Bad Request (400) - password property is missing an uppercase letter",
+      "Bad Request (400) - password property is missing an uppercase letter",
       function() {
         const endpoint = "/register";
         const payload = {
@@ -160,10 +147,10 @@ describe("users.controller integration tests", function() {
         };
         const code = status.BAD_REQUEST;
 
-        return expectApiError(app, endpoint, payload, code);
+        return expectErrorPost(app, endpoint, payload, code);
       });
 
-    it("POST /register - Conflict (409) - username is taken", async function() {
+    it("Conflict (409) - username is taken", async function() {
       const userData = generator.create();
       await generator.insert(userData);
 
@@ -175,10 +162,10 @@ describe("users.controller integration tests", function() {
       };
       const code = status.CONFLICT;
 
-      return expectApiError(app, endpoint, payload, code);
+      return expectErrorPost(app, endpoint, payload, code);
     });
 
-    it("POST /register - Conflict (409) - email is taken", async function() {
+    it("Conflict (409) - email is taken", async function() {
       const userData = generator.create();
       await generator.insert(userData);
 
@@ -190,12 +177,12 @@ describe("users.controller integration tests", function() {
       };
       const code = status.CONFLICT;
 
-      return expectApiError(app, endpoint, payload, code);
+      return expectErrorPost(app, endpoint, payload, code);
     });
   });
 
   describe("/user", function() {
-    it("GET /user - Unauthorized (403) - unauthenticated user", function() {
+    it("Unauthorized (403) - unauthenticated user", function() {
       return request(app)
         .get("/user")
         .expect(status.UNAUTHORIZED)
@@ -206,7 +193,7 @@ describe("users.controller integration tests", function() {
         });
     });
 
-    it("GET /user - OK (200) - authenticated user", async function() {
+    it("OK (200) - authenticated user", async function() {
       Container
         .of(instanceId)
         .get(AuthController)

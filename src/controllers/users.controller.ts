@@ -5,7 +5,7 @@ import { controller, get, post } from "route-decorators";
 import { Inject, Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 
-import { User } from "../database/entities/User";
+import { User } from "../entities/User";
 import { authenticate } from "../middlewares/authenticate";
 import { catchInternal } from "../middlewares/error";
 import { validate } from "../middlewares/validate";
@@ -50,7 +50,7 @@ export class UsersController extends Controller {
     const user = new User({ username, password, email });
 
     this.users.save(user)
-      .then(() => res.sendStatus(status.CREATED))
+      .then(() => res.status(status.CREATED).end())
       .catch((error) => catchInternal(next, error));
 
   }

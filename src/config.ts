@@ -3,7 +3,7 @@ import { Container } from "typedi";
 import { AuthConfiguration } from "./config/auth.config";
 import { GeneralConfiguration } from "./config/general.config";
 import { SecurityConfiguration } from "./config/security.config";
-import { IConfiguration } from "./interfaces/IConfiguration";
+import { IConfiguration } from "./interfaces/core/IConfiguration";
 
 export function createConfiguration(instanceId?: string): IConfiguration[] {
   const security = Container.of(instanceId).get(SecurityConfiguration);

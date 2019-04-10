@@ -1,0 +1,30 @@
+{
+  "title": "Card data input objects",
+  "anyOf": [
+    { "$ref": "#/definitions/input/Basic" }
+  ],
+  "definitions": {
+    "input": {
+      "Basic": {
+        "type": "object",
+        "properties": {
+          "type": { "const": 1 },
+          "data": { "$ref": "#/definitions/dataObjects/Basic" }
+        },
+        "required": ["type", "data"],
+        "additionalProperties": false
+      }
+    },
+    "dataObjects": {
+      "Basic": {
+        "type": "object",
+        "properties": {
+          "front": { "type": "string" },
+          "back": { "type": "string" }
+        },
+        "required": ["front", "back"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

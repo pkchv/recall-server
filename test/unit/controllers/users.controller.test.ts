@@ -8,7 +8,7 @@ import sinonChai from "sinon-chai";
 import { mockReq, mockRes } from "sinon-express-mock";
 
 import { UsersController } from "../../../src/controllers/users.controller";
-import { createRequestWithBody } from "../../setup/create-request";
+import { createRequestWithBody } from "../../setup/create-mock-request";
 
 use(sinonChai);
 use(chaiAsPromised);
@@ -30,7 +30,7 @@ describe("users.controller unit tests", function() {
     sb.restore();
   });
 
-  describe("#actionRegister()", function() {
+  describe("#_register()", function() {
     it("should pass error object to the next middlweware (missing username)", function() {
       const email = "user@domain.com";
       const password = "Password0";

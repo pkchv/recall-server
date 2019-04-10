@@ -1,6 +1,6 @@
 import { Application, Router } from "express";
 
-import { IController } from "../interfaces/IController";
+import { IController } from "../interfaces/core/IController";
 import { onError } from "../middlewares/error";
 
 abstract class Controller implements IController {

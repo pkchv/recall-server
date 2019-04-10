@@ -1,8 +1,8 @@
 import crypto from "crypto";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import normalizeEmail from "validator/lib/normalizeEmail";
 
-import { IUserDto } from "../../interfaces/IUserDto";
+import { IUserDto } from "../interfaces/dto/IUserDto";
 
 @Entity()
 export class User {
@@ -34,18 +34,16 @@ export class User {
   @Column()
   public salt: string;
 
-  @Column()
+  @CreateDateColumn()
   public created: Date;
 
-  @Column()
-  public modified: Date;
+  @UpdateDateColumn()
+  public updated: Date;
 
   constructor(user?: IUserDto) {
     if (user !== undefined) {
       this.username = user.username;
       this.email = User.normalizeEmail(user.email);
-      this.created = user.created || new Date();
-      this.modified = user.modified || new Date();
       this.salt = User.createSalt();
       this.hash = User.createHash(user.password, this.salt);
     }

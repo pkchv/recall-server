@@ -1,7 +1,7 @@
 import { EntityRepository, Repository } from "typeorm";
 import normalizeEmail from "validator/lib/normalizeEmail";
 
-import { User } from "../database/entities/User";
+import { User } from "../entities/User";
 
 @EntityRepository(User)
 export class UsersRepository extends Repository<User> {

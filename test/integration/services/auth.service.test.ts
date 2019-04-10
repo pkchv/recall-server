@@ -1,4 +1,5 @@
 import "mocha";
+import "reflect-metadata";
 
 import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
@@ -6,7 +7,7 @@ import { Container } from "typedi";
 import { useContainer } from "typeorm";
 import uuid from "uuid/v1";
 
-import { User } from "../../../src/database/entities/User";
+import { User } from "../../../src/entities/User";
 import { AuthService } from "../../../src/services/auth.service";
 import { UsersGenerator } from "../../setup/generators/users.generator";
 import { TestDatabase } from "../../setup/test.database";
